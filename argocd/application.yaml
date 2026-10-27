@@ -5,13 +5,16 @@ metadata:
   namespace: argocd
 spec:
   project: default
+
   source:
-    repoURL: https://github.com/4Noisy/lospapus-gitops.git
+    repoURL: https://github.com/4Noisy/gitops-repo.git
     targetRevision: main
     path: overlays/dev
+
   destination:
     server: https://kubernetes.default.svc
     namespace: crediscore
+
   syncPolicy:
     automated:
       prune: true
