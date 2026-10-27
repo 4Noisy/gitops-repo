@@ -24,6 +24,17 @@ kubectl -n argocd patch configmap argocd-cmd-params-cm --type merge \
 kubectl -n argocd rollout restart deployment argocd-server
 kubectl -n argocd rollout status deployment argocd-server --timeout=300s
 
+# Argo Rollouts: el overlay de dev usa un Rollout (canary). El CRD tiene que existir
+# antes de que Argo CD sincronice la app.
+ROLLOUTS_VERSION=v1.10.1
+kubectl create namespace argo-rollouts --dry-run=client -o yaml | kubectl apply -f -
+kubectl apply -n argo-rollouts --server-side --force-conflicts   -f "https://github.com/argoproj/argo-rollouts/releases/download/${ROLLOUTS_VERSION}/install.yaml"
+kubectl -n argo-rollouts rollout status deployment argo-rollouts --timeout=300s
+if ! command -v kubectl-argo-rollouts >/dev/null; then
+  curl -sSL -o /tmp/kubectl-argo-rollouts     "https://github.com/argoproj/argo-rollouts/releases/download/${ROLLOUTS_VERSION}/kubectl-argo-rollouts-linux-amd64"
+  sudo install /tmp/kubectl-argo-rollouts /usr/local/bin/kubectl-argo-rollouts
+fi
+
 kubectl apply -f argocd/application.yaml
 
 echo "Esperando Synced/Healthy (hasta 10 min)..."

@@ -3,6 +3,7 @@ kind: Kustomization
 
 resources:
   - ../../base
+  - rollout.yaml # canary con Argo Rollouts (bonus S08)
 
 images:
   - name: ghcr.io/4noisy/scoring-api
@@ -33,3 +34,13 @@ patches:
       metadata:
         name: scoring-api
       $patch: delete
+  # Los pods los maneja el Rollout (rollout.yaml); el Deployment solo aporta el pod template.
+  - target:
+      group: apps
+      version: v1
+      kind: Deployment
+      name: scoring-api
+    patch: |-
+      - op: replace
+        path: /spec/replicas
+        value: 0
