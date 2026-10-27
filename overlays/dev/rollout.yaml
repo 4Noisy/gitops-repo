@@ -1,0 +1,31 @@
+# Bonus S08: despliegue canary con Argo Rollouts.
+# El Rollout toma el pod template del Deployment de base/ (workloadRef), asi el CI
+# sigue cambiando la imagen del Deployment y cada cambio dispara un canary.
+# Sin service mesh, el peso se aproxima por cantidad de pods: 33 % = 1 de 3, 66 % = 2 de 3.
+apiVersion: argoproj.io/v1alpha1
+kind: Rollout
+metadata:
+  name: scoring-api
+  namespace: crediscore
+  labels:
+    app.kubernetes.io/name: scoring-api
+    app.kubernetes.io/part-of: crediscore
+    iniciativa: crediscore
+spec:
+  replicas: 3
+  revisionHistoryLimit: 5
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: scoring-api
+  workloadRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: scoring-api
+    scaleDown: never # el Deployment ya queda en 0 réplicas por el patch del overlay
+  strategy:
+    canary:
+      steps:
+        - setWeight: 33
+        - pause: { duration: 2m }
+        - setWeight: 66
+        - pause: { duration: 1m }
