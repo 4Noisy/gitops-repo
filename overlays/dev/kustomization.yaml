@@ -9,6 +9,7 @@ images:
     newTag: latest
 
 patches:
+  # Cluster local sin ingress controller: se quita el Ingress.
   - target:
       group: networking.k8s.io
       version: v1
@@ -20,13 +21,15 @@ patches:
       metadata:
         name: scoring-api
       $patch: delete
-   - target:
-    group: autoscaling
-    version: v2
-    kind: HorizontalPodAutoscaler
-    name: scoring-api
-  patch: |-
-    apiVersion: autoscaling/v2
-    kind: HorizontalPodAutoscaler
-    metadata:
-      name: scoring-api$patch: delete   
+  # Cluster local sin metrics-server: sin esto Argo CD marca el HPA como Degraded.
+  - target:
+      group: autoscaling
+      version: v2
+      kind: HorizontalPodAutoscaler
+      name: scoring-api
+    patch: |-
+      apiVersion: autoscaling/v2
+      kind: HorizontalPodAutoscaler
+      metadata:
+        name: scoring-api
+      $patch: delete
