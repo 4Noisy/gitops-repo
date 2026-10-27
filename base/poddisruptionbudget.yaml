@@ -1,0 +1,15 @@
+# Evita que un drain de nodos o un rollout concurrente tumbe más de 1 réplica a la vez.
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: scoring-api
+  namespace: crediscore
+  labels:
+    app.kubernetes.io/name: scoring-api
+    app.kubernetes.io/part-of: crediscore
+    iniciativa: crediscore
+spec:
+  minAvailable: 2
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: scoring-api

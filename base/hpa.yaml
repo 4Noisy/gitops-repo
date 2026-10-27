@@ -1,0 +1,51 @@
+# Escala por CPU (umbral de la S07) y memoria; min/max alineados al caso de uso de
+# scoring-api del slide 6 (picos de originación de crédito).
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: scoring-api
+  namespace: crediscore
+  labels:
+    app.kubernetes.io/name: scoring-api
+    app.kubernetes.io/part-of: crediscore
+    iniciativa: crediscore
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: scoring-api
+  minReplicas: 3
+  maxReplicas: 20
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 65
+    - type: Resource
+      resource:
+        name: memory
+        target:
+          type: Utilization
+          averageUtilization: 75
+  behavior:
+    scaleUp:
+      stabilizationWindowSeconds: 0
+      policies:
+        - type: Percent
+          value: 100
+          periodSeconds: 60
+        - type: Pods
+          value: 4
+          periodSeconds: 60
+      selectPolicy: Max
+    scaleDown:
+      # Ventana amplia: evita bajar réplicas en medio de un pico de solicitudes de
+      # crédito y violar el p95 < 60 s.
+      stabilizationWindowSeconds: 300
+      policies:
+        - type: Pods
+          value: 1
+          periodSeconds: 120
+      selectPolicy: Min

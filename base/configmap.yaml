@@ -1,0 +1,19 @@
+# Config no sensible leída realmente por src/main.py (os.getenv):
+#   - APP_PORT  -> puerto de uvicorn (Dockerfile expone 8080).
+#   - LOG_LEVEL -> nivel del logger "scoring-api".
+# ENVIRONMENT es metadata para logs/alertas, no la lee el código todavía.
+# El lab aún no implementa persistencia (Aurora) ni el Event Bus (Kafka): cuando se
+# agreguen (ADR 0004), sus endpoints se suman aquí, no antes.
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: scoring-config
+  namespace: crediscore
+  labels:
+    app.kubernetes.io/name: scoring-api
+    app.kubernetes.io/part-of: crediscore
+    iniciativa: crediscore
+data:
+  APP_PORT: "8080"
+  LOG_LEVEL: "info"
+  ENVIRONMENT: "dev"

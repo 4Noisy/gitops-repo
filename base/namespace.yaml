@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: crediscore
+  labels:
+    app.kubernetes.io/part-of: crediscore
+    iniciativa: crediscore
+    equipo: los-papus

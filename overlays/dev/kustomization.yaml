@@ -1,0 +1,15 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - ../../base
+images:
+  - name: ghcr.io/4noisy/scoring-api
+    newTag: latest   # el CI lo reemplaza por el SHA de cada release
+patches:
+  # Cluster local sin ingress-nginx/cert-manager: se quita el Ingress para que Argo CD muestre Healthy.
+  - patch: |-
+      $patch: delete
+      apiVersion: networking.k8s.io/v1
+      kind: Ingress
+      metadata:
+        name: scoring-api

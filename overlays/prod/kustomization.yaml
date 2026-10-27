@@ -1,0 +1,15 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - ../../base
+images:
+  - name: ghcr.io/4noisy/scoring-api
+    newTag: latest   # se fija por PR revisado (2 revisores)
+patches:
+  - target:
+      kind: ConfigMap
+      name: scoring-config
+    patch: |-
+      - op: replace
+        path: /data/ENVIRONMENT
+        value: prod

@@ -1,0 +1,33 @@
+# Expone /v1 (prefijo del contrato OpenAPI, api/openapi.yaml) al mundo con TLS.
+# ingressClassName "nginx" sirve para el clúster local del mini-lab (kind/minikube/k3d);
+# en AWS se reemplaza por el AWS Load Balancer Controller (ingressClassName: alb).
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: scoring-api
+  namespace: crediscore
+  labels:
+    app.kubernetes.io/name: scoring-api
+    app.kubernetes.io/part-of: crediscore
+    iniciativa: crediscore
+  annotations:
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/proxy-body-size: "1m"
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+spec:
+  ingressClassName: nginx
+  tls:
+    - hosts:
+        - api.crediscore.cl
+      secretName: scoring-api-tls
+  rules:
+    - host: api.crediscore.cl
+      http:
+        paths:
+          - path: /v1
+            pathType: Prefix
+            backend:
+              service:
+                name: scoring-api
+                port:
+                  name: http

@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: scoring-api
+  namespace: crediscore
+  labels:
+    app.kubernetes.io/name: scoring-api
+    app.kubernetes.io/part-of: crediscore
+    iniciativa: crediscore
+spec:
+  type: ClusterIP
+  selector:
+    app.kubernetes.io/name: scoring-api
+  ports:
+    - name: http
+      port: 80
+      targetPort: http
+      protocol: TCP
