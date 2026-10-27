@@ -1,0 +1,34 @@
+name: validate
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  kustomize-build:
+    name: kustomize-build
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Instalar kubeconform
+        run: |
+          curl -sSL https://github.com/yannh/kubeconform/releases/download/v0.6.7/kubeconform-linux-amd64.tar.gz | tar xz kubeconform
+          sudo mv kubeconform /usr/local/bin/
+
+      - name: Renderizar y validar overlays
+        run: |
+          for env in dev prod; do
+            echo "::group::overlays/${env}"
+            kubectl kustomize "overlays/${env}" | kubeconform -strict -summary -ignore-missing-schemas
+            echo "::endgroup::"
+          done
