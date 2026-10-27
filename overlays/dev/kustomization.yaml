@@ -9,12 +9,12 @@ images:
     newTag: latest
 
 patches:
-  # Elimina el Ingress en desarrollo
-  # porque el cluster local no utiliza ingress-nginx
-  - patch: |-
-      $patch: delete
-      apiVersion: networking.k8s.io/v1
+  - target:
+      group: networking.k8s.io
+      version: v1
       kind: Ingress
-      metadata:
-        name: scoring-api
-        namespace: crediscore
+      name: scoring-api
+      namespace: crediscore
+    patch: |-
+      - op: remove
+        path: /metadata/annotations/cert-manager.io~1cluster-issuer
