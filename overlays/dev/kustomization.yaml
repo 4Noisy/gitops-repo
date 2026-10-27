@@ -14,11 +14,9 @@ patches:
       version: v1
       kind: Ingress
       name: scoring-api
-      namespace: crediscore
     patch: |-
-      $patch: delete
       apiVersion: networking.k8s.io/v1
       kind: Ingress
       metadata:
         name: scoring-api
-        namespace: crediscore
+      $patch: delete
