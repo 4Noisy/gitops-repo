@@ -1,0 +1,13 @@
+{
+  "name": "gitops-repo · Argo CD local",
+  "image": "mcr.microsoft.com/devcontainers/base:ubuntu",
+  "features": {
+    "ghcr.io/devcontainers/features/docker-in-docker:4": {},
+    "ghcr.io/devcontainers/features/kubectl-helm-minikube:1": {}
+  },
+  "forwardPorts": [8080],
+  "portsAttributes": {
+    "8080": { "label": "Argo CD", "onAutoForward": "openBrowser" }
+  },
+  "postAttachCommand": "echo 'Para levantar Argo CD: bash scripts/argocd-up.sh'"
+}
