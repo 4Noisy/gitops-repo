@@ -20,3 +20,13 @@ patches:
       metadata:
         name: scoring-api
       $patch: delete
+   - target:
+    group: autoscaling
+    version: v2
+    kind: HorizontalPodAutoscaler
+    name: scoring-api
+  patch: |-
+    apiVersion: autoscaling/v2
+    kind: HorizontalPodAutoscaler
+    metadata:
+      name: scoring-api$patch: delete   
