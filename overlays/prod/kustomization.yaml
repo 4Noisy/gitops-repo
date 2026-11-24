@@ -4,7 +4,7 @@ resources:
   - ../../base
 images:
   - name: ghcr.io/4noisy/scoring-api
-    newTag: "c39a8a4829b3d0223c080b9648c1a41d572b9ab7"   # se fija por PR revisado (2 revisores)
+    newTag: "c6b3cd94d5b32cc44e43b3bda7415878b5574087"   # se fija por PR revisado (2 revisores)
 patches:
   - target:
       kind: ConfigMap
