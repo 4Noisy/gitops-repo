@@ -7,7 +7,7 @@ resources:
 
 images:
   - name: ghcr.io/4noisy/scoring-api
-    newTag: "3c171ce77b654577768c193ce97afe8c90767e11"
+    newTag: "c6b3cd94d5b32cc44e43b3bda7415878b5574087"
 
 patches:
   # Cluster local sin ingress controller: se quita el Ingress.
